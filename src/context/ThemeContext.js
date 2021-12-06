@@ -14,7 +14,7 @@ const themeReducer = (state, action) => {
 export function ThemeProvider({ children }) {
   // New component so we can change the value later on
 
-  const [state, dispatch] = useReducer(themeReducer, { color: "blue" });
+  const [state, dispatch] = useReducer(themeReducer, { color: "#58249c" });
 
   const changeColor = (color) => {
     dispatch({ type: "CHANGE_COLOR", payload: color });
