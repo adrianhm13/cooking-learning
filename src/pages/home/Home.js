@@ -14,25 +14,27 @@ export default function Home() {
   useEffect(() => {
     setIsPending(true);
 
-    projectFirestore
-      .collection("recipes")
-      .get()
-      .then((snapshot) => {
+    const unsub = projectFirestore.collection("recipes").onSnapshot(
+      (snapshot) => {
+        // onSnapshot adds an event listener and every time the data changes from firebase, it will trigger the function. It takes a second argument as an error
         if (snapshot.empty) {
           setError("There is no recipes");
-          setIsPending(false)
-        }else{
-            let results = [];
-            snapshot.docs.forEach(doc => {
-                results.push({id: doc.id, ...doc.data()})
-            })
-            setData(results)
-            setIsPending(false)
+          setIsPending(false);
+        } else {
+          let results = [];
+          snapshot.docs.forEach((doc) => {
+            results.push({ id: doc.id, ...doc.data() });
+          });
+          setData(results);
+          setIsPending(false);
         }
-      }).catch(error => {
-          setError(error.message)
-          setIsPending(false)
-      });
+      },
+      (error) => {
+        setError(error.message);
+        setIsPending(false);
+      }
+    );
+    return () => unsub(); // projectFirestore returns a function which can assigned to a const so we can call it later to remove the event listener}
   }, []);
 
   return (
